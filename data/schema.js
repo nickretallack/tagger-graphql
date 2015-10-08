@@ -39,6 +39,8 @@ import {
   getWidgets,
 } from './database';
 
+var fs = require('fs');
+
 /**
  * We get the node interface and field from the Relay library.
  *
@@ -70,6 +72,20 @@ var {nodeInterface, nodeField} = nodeDefinitions(
 /**
  * Define your own types here
  */
+
+let getFiles = () => fs.readdirSync('public/files').map(path => ({url: path}))
+
+var fileType = new GraphQLObjectType({
+  name: 'File',
+  description: 'An uploaded file',
+  fields: () => ({
+    id: globalIdField('File'),
+    url: {
+      type: GraphQLString,
+    },
+  }),
+  interfaces: [nodeInterface],
+})
 
 var userType = new GraphQLObjectType({
   name: 'User',
@@ -118,6 +134,10 @@ var queryType = new GraphQLObjectType({
       type: userType,
       resolve: () => getViewer(),
     },
+    files: {
+      type: new GraphQLList(fileType),
+      resolve: getFiles
+    }
   }),
 });
 
