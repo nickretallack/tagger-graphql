@@ -31,8 +31,8 @@ var widgets = ['What\'s-it', 'Who\'s-it', 'How\'s-it'].map((name, i) => {
   return widget;
 });
 
-let getFiles = () => fs.readdirSync('public/files').map(path => new File({id: path, path: path}))
-let getFile = (id) => new File({id: id, path: id})
+let getFiles = () => fs.readdirSync('public/files').map(path => new File({id: path, url: path}))
+let getFile = (id) => new File({id: id, url: id})
 
 module.exports = {
   // Export methods that your schema can use to interact with your database
@@ -42,4 +42,7 @@ module.exports = {
   getWidgets: () => widgets,
   User,
   Widget,
+  File,
+  getFiles,
+  getFile,
 };
