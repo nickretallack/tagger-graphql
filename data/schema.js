@@ -73,7 +73,7 @@ var {nodeInterface, nodeField} = nodeDefinitions(
  * Define your own types here
  */
 
-let getFiles = () => fs.readdirSync('public/files').map(path => ({url: path}))
+let getFiles = () => fs.readdirSync('public/files').map(path => ({id: path, url: path}))
 
 var fileType = new GraphQLObjectType({
   name: 'File',
@@ -121,6 +121,9 @@ var widgetType = new GraphQLObjectType({
 var {connectionType: widgetConnection} =
   connectionDefinitions({name: 'Widget', nodeType: widgetType});
 
+var {connectionType: fileConnection} =
+  connectionDefinitions({name: 'File', nodeType: fileType});
+
 /**
  * This is the type that will be the root of our query,
  * and the entry point into our schema.
@@ -135,8 +138,9 @@ var queryType = new GraphQLObjectType({
       resolve: () => getViewer(),
     },
     files: {
-      type: new GraphQLList(fileType),
-      resolve: getFiles
+      type: fileConnection,
+      args: connectionArgs,
+      resolve: (parent, args) => connectionFromArray(getFiles(), args) 
     }
   }),
 });
