@@ -37,9 +37,11 @@ import {
   getViewer,
   getWidget,
   getWidgets,
+  getFile,
+  getFiles,
+  File,
 } from './database';
 
-var fs = require('fs');
 
 /**
  * We get the node interface and field from the Relay library.
@@ -54,6 +56,8 @@ var {nodeInterface, nodeField} = nodeDefinitions(
       return getUser(id);
     } else if (type === 'Widget') {
       return getWidget(id);
+    } else if (type == 'File') {
+      return getFile(id);
     } else {
       return null;
     }
@@ -61,8 +65,10 @@ var {nodeInterface, nodeField} = nodeDefinitions(
   (obj) => {
     if (obj instanceof User) {
       return userType;
-    } else if (obj instanceof Widget)  {
+    } else if (obj instanceof Widget) {
       return widgetType;
+    } else if (obj instanceof File) {
+      return fileType;
     } else {
       return null;
     }
@@ -72,8 +78,6 @@ var {nodeInterface, nodeField} = nodeDefinitions(
 /**
  * Define your own types here
  */
-
-let getFiles = () => fs.readdirSync('public/files').map(path => ({id: path, url: path}))
 
 var fileType = new GraphQLObjectType({
   name: 'File',

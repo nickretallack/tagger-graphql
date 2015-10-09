@@ -7,9 +7,18 @@
  *  of patent rights can be found in the PATENTS file in the same directory.
  */
 
+var fs = require('fs');
+
 // Model types
 class User extends Object {}
 class Widget extends Object {}
+class File extends Object {
+  constructor({id, url}) {
+    super();
+    this.id = id;
+    this.url = url;
+  }
+}
 
 // Mock data
 var viewer = new User();
@@ -21,6 +30,9 @@ var widgets = ['What\'s-it', 'Who\'s-it', 'How\'s-it'].map((name, i) => {
   widget.id = `${i}`;
   return widget;
 });
+
+let getFiles = () => fs.readdirSync('public/files').map(path => new File({id: path, path: path}))
+let getFile = (id) => new File({id: id, path: id})
 
 module.exports = {
   // Export methods that your schema can use to interact with your database
